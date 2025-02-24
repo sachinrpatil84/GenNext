@@ -1,0 +1,61 @@
+erDiagram
+    WORKFLOW {
+        string id PK
+        string name
+        string description
+        string workflowType
+        list impactedSystems
+        date lastUpdated
+    }
+    
+    SYSTEM {
+        string id PK
+        string name
+        string description
+        list dependencies
+        string gitProjectUrl
+    }
+    
+    COMPONENT {
+        string id PK
+        string name
+        string description
+        list classNames
+        string systemId FK
+        string applicationStack
+    }
+    
+    REGULATION {
+        string id PK
+        string name
+        string description
+        date effectiveDate
+        list relatedDocuments
+    }
+    
+    IMPACT_ASSESSMENT {
+        string id PK
+        string workflowId FK
+        string regulationId FK
+        date creationDate
+        string status
+        list impactedSystems
+        list generatedRequirements
+        double automationConfidence
+    }
+    
+    SYSTEM_IMPACT {
+        string systemId FK
+        string systemName
+        string impactLevel
+        list impactedClasses
+        list testCases
+        string jiraTicketId
+    }
+    
+    WORKFLOW ||--o{ SYSTEM : "impacts"
+    SYSTEM ||--o{ COMPONENT : "contains"
+    WORKFLOW ||--o{ IMPACT_ASSESSMENT : "assessed for"
+    REGULATION ||--o{ IMPACT_ASSESSMENT : "causes"
+    IMPACT_ASSESSMENT ||--o{ SYSTEM_IMPACT : "details"
+    SYSTEM ||--o{ SYSTEM_IMPACT : "referenced in"
