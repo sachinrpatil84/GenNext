@@ -1,0 +1,68 @@
+flowchart LR
+    subgraph "External Systems"
+        CONF[Confluence]
+        JIRA[JIRA]
+        GIT[Git]
+        SME[SME]
+    end
+
+    subgraph "Trading Impact Assessment System"
+        subgraph "Data Input"
+            DI1[Document Receiver]
+            DI2[Code Repository Scanner]
+            DI3[Ticket Analyzer]
+            DI4[Manual Input Handler]
+        end
+
+        subgraph "Processing"
+            P1[Workflow Analyzer]
+            P2[NLP Processor]
+            P3[Impact Calculator]
+            P4[Test Generator]
+            P5[Requirement Builder]
+        end
+
+        subgraph "Data Store"
+            DS1[(Workflows)]
+            DS2[(Systems)]
+            DS3[(Components)]
+            DS4[(Impact History)]
+            DS5[(Requirements)]
+        end
+
+        subgraph "Output Generation"
+            O1[JIRA Integration]
+            O2[Documentation Generator]
+            O3[Dashboard]
+        end
+    end
+
+    CONF -->|Documentation| DI1
+    JIRA -->|Historical Tickets| DI3
+    GIT -->|Code Base| DI2
+    SME -->|Expert Knowledge| DI4
+
+    DI1 -->|Process Documents| P2
+    DI2 -->|Code Structure| P3
+    DI3 -->|Historical Change Patterns| P1
+    DI4 -->|Validation Input| P5
+
+    P1 <-->|Workflow Data| DS1
+    P2 <-->|Content Analysis| DS5
+    P3 <-->|System Mapping| DS2
+    P3 <-->|Component Details| DS3
+    P4 <-->|Test History| DS4
+    P5 <-->|Requirement Templates| DS5
+
+    P1 -->|Workflow Context| P3
+    P2 -->|Extracted Requirements| P5
+    P3 -->|Impact Assessment| P4
+    P3 -->|Impacted Components| P5
+    P4 -->|Test Cases| O2
+    P5 -->|Requirements| O1
+
+    O1 -->|Create Tickets| JIRA
+    O2 -->|Produce Documentation| CONF
+    O1 -->|Ticket Status| O3
+    O2 -->|Documentation Status| O3
+    DS4 -->|Historical Metrics| O3

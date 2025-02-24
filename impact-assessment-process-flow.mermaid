@@ -1,0 +1,16 @@
+flowchart TD
+    START([Start]) --> INPUT[Receive Input:\n- Workflow Type\n- Regulatory/Client Change\n- Documentation]
+    INPUT --> FETCH_HIST[Fetch Historical Data:\n- Confluence Docs\n- JIRA Tickets\n- Git History]
+    FETCH_HIST --> MAP_WORKFLOW[Map Workflow\nto Systems & Components]
+    MAP_WORKFLOW --> IDENTIFY_IMPACTS[Identify Impacted\nSystems & Components]
+    IDENTIFY_IMPACTS --> CODE_ANALYSIS[Analyze Code:\nIdentify Impacted Classes]
+    CODE_ANALYSIS --> TEST_GEN[Generate Test Cases]
+    TEST_GEN --> REQ_GEN[Generate Requirements]
+    REQ_GEN --> SME_CHECK{SME Review\nNeeded?}
+    SME_CHECK -->|Yes| SME_REVIEW[SME Review & Feedback]
+    SME_REVIEW --> UPDATE_MODEL[Update Model with Feedback]
+    SME_CHECK -->|No| CREATE_OUTPUT[Create Output Artifacts]
+    UPDATE_MODEL --> CREATE_OUTPUT
+    CREATE_OUTPUT --> CREATE_JIRA[Create JIRA Tickets\nfor Impacted Systems]
+    CREATE_JIRA --> GENERATE_DOCS[Generate Documentation]
+    GENERATE_DOCS --> END([End])

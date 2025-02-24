@@ -1,0 +1,62 @@
+sequenceDiagram
+    actor User
+    participant API as API Controller
+    participant IA as Impact Assessment Service
+    participant WA as Workflow Analysis
+    participant CIA as Code Impact Analysis
+    participant TG as Test Generator
+    participant RG as Requirement Generator
+    participant Mongo as MongoDB
+    participant Jira as JIRA Service
+    participant Git as Git Service
+    participant Conf as Confluence Service
+
+    User->>API: Request Impact Assessment
+    activate API
+    
+    API->>IA: generateImpactAssessment(workflowId, regulationId, change)
+    activate IA
+    
+    IA->>WA: analyzeWorkflow(workflowId)
+    activate WA
+    WA->>Mongo: findById(workflowId)
+    Mongo-->>WA: workflow data
+    WA->>Conf: fetchDocumentation(workflowType)
+    Conf-->>WA: documentation
+    WA-->>IA: workflow analysis
+    deactivate WA
+    
+    loop For each impacted system
+        IA->>CIA: identifyImpactedClasses(systemId, changeDescription)
+        activate CIA
+        CIA->>Mongo: findBySystemId(systemId)
+        Mongo-->>CIA: components
+        CIA->>Git: analyzeCodebase(components)
+        Git-->>CIA: code analysis
+        CIA-->>IA: impacted classes
+        deactivate CIA
+        
+        IA->>TG: generateTestCases(impactedClasses)
+        activate TG
+        TG-->>IA: test cases
+        deactivate TG
+        
+        IA->>RG: generateRequirements(system, impactedClasses)
+        activate RG
+        RG->>Mongo: findHistoricalRequirements()
+        Mongo-->>RG: historical data
+        RG-->>IA: requirements
+        deactivate RG
+        
+        IA->>Jira: createTicket(system, impact)
+        Jira-->>IA: ticket ID
+    end
+    
+    IA->>Mongo: save(assessment)
+    Mongo-->>IA: saved assessment
+    
+    IA-->>API: impact assessment
+    deactivate IA
+    
+    API-->>User: Impact Assessment Response
+    deactivate API

@@ -1,0 +1,104 @@
+flowchart TB
+    subgraph "Data Sources"
+        CONF[Confluence]
+        JIRA[JIRA]
+        GIT[Git Repositories]
+        SME[Manual SME Input]
+        PDF[PDF Documents]
+    end
+
+    subgraph "Data Ingestion Layer"
+        CONF_CONN[Confluence Connector]
+        JIRA_CONN[JIRA Connector]
+        GIT_CONN[Git Connector]
+        DOC_PARSER[Document Parser]
+        UI[SME Input UI]
+    end
+
+    subgraph "Storage Layer"
+        MONGO[(MongoDB)]
+    end
+
+    subgraph "Analysis Engine"
+        WORKFLOW[Workflow Mapper]
+        DEP[Dependency Analyzer]
+        PATTERN[Pattern Recognition]
+        NLP[NLP Processor]
+        CLASS[Classification System]
+    end
+
+    subgraph "Impact Assessment Generator"
+        CODE_IMPACT[Code Impact Analyzer]
+        TEST_GEN[Test Case Generator]
+        IMPACT_VIZ[Impact Visualization]
+        RISK[Risk Assessment]
+        EFFORT[Change Effort Estimator]
+    end
+
+    subgraph "Requirement Generation Engine"
+        TEMPLATE[Template Engine]
+        REG_KB[Regulatory Knowledge Base]
+        GAP[Gap Analyzer]
+        VERSION[Versioning System]
+        QUALITY[Quality Checker]
+    end
+
+    subgraph "Output Management"
+        JIRA_CREATE[JIRA Ticket Creator]
+        DOC_GEN[Documentation Generator]
+        TEST_PLAN[Test Plan Builder]
+        DASH[Dashboard]
+        FEEDBACK[Feedback Loop]
+    end
+
+    CONF --> CONF_CONN
+    JIRA --> JIRA_CONN
+    GIT --> GIT_CONN
+    SME --> UI
+    PDF --> DOC_PARSER
+
+    CONF_CONN --> MONGO
+    JIRA_CONN --> MONGO
+    GIT_CONN --> MONGO
+    DOC_PARSER --> MONGO
+    UI --> MONGO
+
+    MONGO --> WORKFLOW
+    MONGO --> DEP
+    MONGO --> PATTERN
+    MONGO --> NLP
+    MONGO --> CLASS
+
+    WORKFLOW --> CODE_IMPACT
+    DEP --> CODE_IMPACT
+    PATTERN --> CODE_IMPACT
+    NLP --> CODE_IMPACT
+    CLASS --> CODE_IMPACT
+
+    CODE_IMPACT --> TEST_GEN
+    CODE_IMPACT --> IMPACT_VIZ
+    CODE_IMPACT --> RISK
+    CODE_IMPACT --> EFFORT
+
+    CODE_IMPACT --> TEMPLATE
+    RISK --> TEMPLATE
+    EFFORT --> TEMPLATE
+    
+    TEMPLATE --> REG_KB
+    TEMPLATE --> GAP
+    TEMPLATE --> VERSION
+    TEMPLATE --> QUALITY
+
+    GAP --> FEEDBACK
+    QUALITY --> FEEDBACK
+
+    TEST_GEN --> TEST_PLAN
+    IMPACT_VIZ --> DOC_GEN
+    RISK --> JIRA_CREATE
+    TEMPLATE --> DOC_GEN
+    VERSION --> DOC_GEN
+    
+    JIRA_CREATE --> JIRA
+    FEEDBACK --> DASH
+    DOC_GEN --> DASH
+    TEST_PLAN --> DASH
